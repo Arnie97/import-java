@@ -1,4 +1,3 @@
-import atexit
 import builtins
 import os
 import types
@@ -16,7 +15,6 @@ class JavaPackage(types.ModuleType):
         env = jb.get_env()
         if not env:
             jb.start_vm(class_path=class_path())
-            atexit.register(jb.kill_vm)
             env = jb.get_env()
 
         class_name = self.__name__ + '.' + attr
@@ -31,15 +29,20 @@ def class_path():
     return os.environ.get('CLASSPATH', '').split(os.pathsep) + jb.JARS
 
 
-def new_import(name, *args, **kwargs):
-    try:
-        module = old_import(name, *args, **kwargs)
-    except ModuleNotFoundError as e:
-        module = JavaPackage(name)
-        print(dir(module))
-    finally:
-        return module
+class Context():
+    'Patch or recover the __import__ function.'
 
+    def new_import(self, name, *args, **kwargs):
+        try:
+            module = self.old_import(name, *args, **kwargs)
+        except ModuleNotFoundError as e:
+            module = JavaPackage(name)
+        finally:
+            return module
 
-old_import = builtins.__import__
-builtins.__import__ = new_import
+    def __enter__(self):
+        self.old_import = builtins.__import__
+        builtins.__import__ = self.new_import
+
+    def __exit__(self, *_):
+        builtins.__import__ = self.old_import
