@@ -29,6 +29,9 @@ class Context():
         try:
             module = self.old_import(name, *args, **kwargs)
         except ModuleNotFoundError as e:
+            # shortcut for the default package
+            if name == '_':
+                name = 'java.lang'
             module = JavaPackage(name)
         finally:
             return module
