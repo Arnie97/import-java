@@ -2,8 +2,6 @@ import builtins
 import os
 import types
 
-import javabridge as jb
-
 
 class JavaPackage(types.ModuleType):
     'An on-demand Java class loader.'
@@ -12,21 +10,16 @@ class JavaPackage(types.ModuleType):
         if attr.startswith('__'):
             return super().__getattribute__(attr)
 
-        env = jb.get_env()
-        if not env:
-            jb.start_vm(class_path=class_path())
-            env = jb.get_env()
-
         class_name = self.__name__ + '.' + attr
-        if env.find_class(class_name.replace('.', '/')):
-            return jb.JClassWrapper(class_name)
-        else:
+        try:
+            return autoclass(class_name)
+        except JavaException:
             raise ModuleNotFoundError(class_name)
 
 
 def class_path():
     'Read the $CLASSPATH environment variable.'
-    return os.environ.get('CLASSPATH', '').split(os.pathsep) + jb.JARS
+    return os.environ.get('CLASSPATH', '').split(os.pathsep)
 
 
 class Context():
@@ -46,3 +39,13 @@ class Context():
 
     def __exit__(self, *_):
         builtins.__import__ = self.old_import
+
+
+try:
+    from jnius import autoclass, JavaException
+except ModuleNotFoundError:
+    from javabridge import JClassWrapper as autoclass, JavaException
+
+    import javabridge as jb
+    if not jb.get_env():
+        jb.start_vm(class_path=class_path() + jb.JARS)
