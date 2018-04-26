@@ -25,16 +25,16 @@ def class_path():
 class Context():
     'Patch or recover the __import__ function.'
 
-    def new_import(self, name, *args, **kwargs):
+    def new_import(self, name, globals=None, locals=None, fromlist=(), *args):
         try:
-            module = self.old_import(name, *args, **kwargs)
+            return self.old_import(name, globals, locals, fromlist, *args)
         except ModuleNotFoundError as e:
+            if not fromlist:
+                raise e
             # shortcut for the default package
             if name == '_':
                 name = 'java.lang'
-            module = JavaPackage(name)
-        finally:
-            return module
+            return JavaPackage(name)
 
     def __enter__(self):
         self.old_import = builtins.__import__
