@@ -1,5 +1,6 @@
 import builtins
 import os
+import sys
 import types
 
 
@@ -22,8 +23,10 @@ def class_path():
     return os.environ.get('CLASSPATH', '').split(os.pathsep)
 
 
-class Context():
+class Context(types.ModuleType):
     'Patch or recover the __import__ function.'
+
+    __dict__ = globals()
 
     def new_import(self, name, globals=None, locals=None, fromlist=(), *args):
         try:
@@ -52,3 +55,5 @@ except ModuleNotFoundError:
     import javabridge as jb
     if not jb.get_env():
         jb.start_vm(class_path=class_path() + jb.JARS)
+finally:
+    sys.modules[__name__] = Context(__name__)
