@@ -3,6 +3,7 @@ Import your Java packages seamlessly into CPython.
 
 ## Quick Start
 We'll create a temporary file in Java and then read it in Python to illustrate the usage:
+
 ```python
 >>> import java
 >>> with java:
@@ -12,20 +13,24 @@ We'll create a temporary file in Java and then read it in Python to illustrate t
 >>> temp_path = Files.createTempFile('sample', '.tmp')
 >>> sample_text = String('Greetings from Java')
 >>> Files.write(temp_path, sample_text.getBytes())
+<java.nio.file.Path at 0x... jclass=java/nio/file/Path jself=...>
 
 >>> with open(temp_path.toString()) as f:
 ...     print(repr(f.read()))
 ...
 'Greetings from Java'
+
 ```
 
 You can also use `_` as a short alias for `java.lang`:
+
 ```python
 >>> with java:
 ...     from _ import System
 ...
 >>> System.getProperties().get('java.specification.version')
 '1.8'
+
 ```
 
 Wildcard imports (such as `from java.util import *`) are not supported yet.
