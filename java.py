@@ -47,6 +47,8 @@ class Context(types.ModuleType):
         builtins.__import__ = self.old_import
 
 
+if 'ModuleNotFoundError' not in dir(builtins):
+    ModuleNotFoundError = ImportError
 try:
     from jnius import autoclass, JavaException
 except ModuleNotFoundError:
