@@ -1,4 +1,10 @@
 # import-java
+[![Build Status](https://travis-ci.org/Arnie97/import-java.svg)](https://travis-ci.org/Arnie97/import-java)
+[![Code Coverage](https://codecov.io/gh/Arnie97/import-java/branch/master/graph/badge.svg)](https://codecov.io/gh/Arnie97/import-java)
+[![PyPI Version](https://img.shields.io/pypi/v/import-java.svg)](https://pypi.org/project/import-java)
+[![Python Compatibility](https://img.shields.io/pypi/pyversions/import-java.svg)](https://pypi.org/project/import-java)
+[![License](https://img.shields.io/pypi/l/import-java.svg)](LICENSE)
+
 Import your Java packages seamlessly into CPython.
 
 ## Quick Start

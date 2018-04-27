@@ -1,0 +1,22 @@
+sudo: false
+language: python
+
+python:
+  - "3.4"
+  - "3.5"
+  - "3.6"
+
+addons:
+  apt:
+    packages:
+      - openjdk-8-jdk
+
+install:
+  - export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
+  - pip install tox-travis codecov
+
+script:
+  - tox
+
+after_success:
+  - codecov
