@@ -28,7 +28,7 @@ setup(
     python_requires='>=3.0',
     install_requires=['javabridge' if get_dist('javabridge') else 'pyjnius'],
     setup_requires=['pytest-runner', 'setuptools_scm'],
-    tests_require=['pytest-cov'],
+    tests_require=['pytest-cov', 'pytest-flake8'],
     zip_safe=True,
     classifiers=[
         'Development Status :: 4 - Beta',
