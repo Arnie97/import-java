@@ -34,7 +34,7 @@ You can also use `_` as a short alias for `java.lang`:
 >>> with java:
 ...     from _ import System
 ...
->>> System.getProperties().get('java.specification.version')
+>>> System.getProperty('java.specification.version')
 '1.8'
 
 ```
